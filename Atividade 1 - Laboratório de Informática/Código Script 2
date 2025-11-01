@@ -1,0 +1,32 @@
+USE biblioteca;
+
+-- CONSULTA 1: LIVROS DISPONÍVEIS
+SELECT '=== 1. LIVROS DISPONÍVEIS ===' as '';
+SELECT id, titulo, ano_publicacao, isbn 
+FROM livros 
+WHERE status = 'disponivel';
+
+-- CONSULTA 2: LIVROS POR AUTOR
+SELECT '=== 2. LIVROS DE MACHADO DE ASSIS ===' as '';
+SELECT l.titulo, l.ano_publicacao, l.status
+FROM livros l
+JOIN livros_autores la ON l.id = la.livro_id
+JOIN autores a ON a.id = la.autor_id
+WHERE a.nome = 'Machado de Assis';
+
+-- CONSULTA 3: EMPRÉSTIMOS ATIVOS
+SELECT '=== 3. EMPRÉSTIMOS ATIVOS ===' as '';
+SELECT u.nome as usuario, l.titulo as livro, 
+       e.data_emprestimo, e.data_devolucao
+FROM emprestimos e
+JOIN livros l ON e.livro_id = l.id
+JOIN usuarios u ON e.usuario_id = u.id
+WHERE e.data_devolucao >= CURDATE();
+
+-- CONSULTA 4: CATÁLOGO COMPLETO
+SELECT '=== 4. CATÁLOGO COMPLETO ===' as '';
+SELECT l.titulo, a.nome as autor, l.ano_publicacao, l.status
+FROM livros l
+JOIN livros_autores la ON l.id = la.livro_id
+JOIN autores a ON a.id = la.autor_id
+ORDER BY a.nome, l.titulo;
